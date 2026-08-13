@@ -3,6 +3,8 @@
 Une interface conversationnelle moderne, fluide et réactive conçue pour interagir avec l'Agent d'Architecture et de Conformité IT (RAG).
 ## 📸 Aperçu de l'Interface
 
+<img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/203a3183-4ced-4cf0-9499-6961833d58c8" />
+
 ## 🛠️ Stack Technique
 
 Ce projet est construit avec les outils modernes de l'écosystème React :
