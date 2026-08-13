@@ -1,6 +1,5 @@
 import { SessionEntry } from '@/types/os'
 import { Button } from '../../../ui/button'
-import useSessionLoader from '@/hooks/useSessionLoader'
 import { deleteSessionAPI } from '@/api/os'
 import { useStore } from '@/store'
 import { toast } from 'sonner'
@@ -23,65 +22,48 @@ const SessionItem = ({
   onSessionClick
 }: SessionItemProps) => {
   const {
-    agentId,
-    teamId,
-    dbId,
     setSessionId,
     authToken,
     selectedEndpoint,
     sessionsData,
-    setSessionsData,
-    mode
+    setSessionsData
   } = useStore()
-  const { getSession } = useSessionLoader()
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const { clearChat } = useChatActions()
 
-  const handleGetSession = async () => {
-    if (!(agentId || teamId || dbId)) return
-
+  const handleGetSession = () => {
     onSessionClick()
-    await getSession(
-      {
-        entityType: mode,
-        agentId,
-        teamId,
-        dbId: dbId ?? ''
-      },
-      session_id
-    )
     setSessionId(session_id)
+    // TODO: load messages for this session from backend when endpoint is ready
   }
 
   const handleDeleteSession = async () => {
-    if (!(agentId || teamId || dbId)) return
     setIsDeleting(true)
     try {
       const response = await deleteSessionAPI(
         selectedEndpoint,
-        dbId ?? '',
+        '',
         session_id,
         authToken
       )
 
       if (response?.ok && sessionsData) {
         setSessionsData(sessionsData.filter((s) => s.session_id !== session_id))
-        // If the deleted session was the active one, clear the chat
         if (currentSessionId === session_id) {
           setSessionId(null)
           clearChat()
         }
-        toast.success('Session deleted')
+        toast.success('Session supprimée')
       } else {
         const errorMsg = await response?.text()
         toast.error(
-          `Failed to delete session: ${response?.statusText || 'Unknown error'} ${errorMsg || ''}`
+          `Erreur suppression: ${response?.statusText || 'Erreur inconnue'} ${errorMsg || ''}`
         )
       }
     } catch (error) {
       toast.error(
-        `Failed to delete session: ${error instanceof Error ? error.message : String(error)}`
+        `Erreur suppression: ${error instanceof Error ? error.message : String(error)}`
       )
     } finally {
       setIsDeleteModalOpen(false)

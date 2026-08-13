@@ -1,6 +1,6 @@
 import { APIRoutes } from './routes'
 
-import { Sessions } from '@/types/os'
+import { SessionEntry } from '@/types/os'
 
 // Helper function to create headers with optional auth token
 const createHeaders = (authToken?: string): HeadersInit => {
@@ -27,18 +27,27 @@ export const getStatusAPI = async (
 }
 
 export const getAllSessionsAPI = async (
-  ..._args: [string, 'agent' | 'team', string, string, string?]
-): Promise<Sessions | { data: [] }> => {
-  // Sessions are not supported by the custom backend yet.
-  // Return empty data to keep the UI functional without errors.
-  void _args
-  return { data: [] }
+  base: string,
+  authToken?: string
+): Promise<SessionEntry[]> => {
+  const response = await fetch(APIRoutes.History(base), {
+    method: 'GET',
+    headers: createHeaders(authToken)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Erreur chargement sessions: ${response.statusText}`)
+  }
+
+  // The backend returns SessionEntry[] directly
+  const data: SessionEntry[] = await response.json()
+  return data
 }
 
 export const getSessionAPI = async (
   ..._args: [string, 'agent' | 'team', string, string?, string?]
 ): Promise<null> => {
-  // Sessions are not supported by the custom backend yet.
+  // Individual session loading not yet implemented
   void _args
   return null
 }
@@ -46,7 +55,7 @@ export const getSessionAPI = async (
 export const deleteSessionAPI = async (
   ..._args: [string, string, string, string?]
 ) => {
-  // Sessions are not supported by the custom backend yet.
+  // Session deletion not yet implemented
   void _args
   return new Response(null, { status: 200 })
 }

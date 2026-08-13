@@ -31,17 +31,12 @@ const SkeletonList: FC<SkeletonListProps> = ({ skeletonCount }) => {
 const Sessions = () => {
   const {
     selectedEndpoint,
-    mode,
     isEndpointActive,
     isEndpointLoading,
     hydrated,
     sessionsData,
-    setSessionsData,
     isSessionsLoading,
-    agentId,
-    teamId,
-    sessionId,
-    dbId
+    sessionId
   } = useStore()
 
   const [isScrolling, setIsScrolling] = useState(false)
@@ -49,7 +44,7 @@ const Sessions = () => {
     null
   )
 
-  const { getSessions, getSession } = useSessionLoader()
+  const { getSessions } = useSessionLoader()
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleScroll = () => {
@@ -73,37 +68,11 @@ const Sessions = () => {
     }
   }, [])
 
+  // Fetch sessions when endpoint is active and hydrated
   useEffect(() => {
-    if (hydrated && sessionId && selectedEndpoint && (agentId || teamId)) {
-      const entityType = agentId ? 'agent' : 'team'
-      getSession({ entityType, agentId, teamId, dbId }, sessionId)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, sessionId, selectedEndpoint, agentId, teamId, dbId])
-
-  useEffect(() => {
-    if (!selectedEndpoint || isEndpointLoading) return
-    if (!(agentId || teamId || dbId)) {
-      setSessionsData([])
-      return
-    }
-    setSessionsData([])
-    getSessions({
-      entityType: mode,
-      agentId,
-      teamId,
-      dbId
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    selectedEndpoint,
-    agentId,
-    teamId,
-    mode,
-    isEndpointLoading,
-    getSessions,
-    dbId
-  ])
+    if (!hydrated || !selectedEndpoint || isEndpointLoading || !isEndpointActive) return
+    getSessions()
+  }, [hydrated, selectedEndpoint, isEndpointLoading, isEndpointActive, getSessions])
 
   useEffect(() => {
     if (sessionId) setSelectedSessionId(sessionId)
