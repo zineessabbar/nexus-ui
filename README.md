@@ -1,6 +1,13 @@
-# 🏦 Moteur de Conformité BCP - Interface Utilisateur
+# Projet NEXUS : Moteur de Conformité Architecturale IA - Interface Utilisateur
+## Note de Confidentialité : 
+Ce dépôt contient la version front-end anonymisée du projet conçu lors d'un stage au sein de la Direction Architecture des Systèmes d'Information de la Banque Centrale Populaire (BCP).
 
+## Moteur Backend : 
+Ce dépôt contient uniquement l'interface client. Le cœur du système (pipeline RAG, base de données vectorielle pgvector, et orchestration LangGraph) est situé dans le dépôt [nexus-engine](https://github.com/zineessabbar/nexus-engine)
+
+## Présentation:
 Une interface conversationnelle moderne, fluide et réactive conçue pour interagir avec l'Agent d'Architecture et de Conformité IT (RAG).
+
 ## 📸 Aperçu de l'Interface
 
 <img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/203a3183-4ced-4cf0-9499-6961833d58c8" />
